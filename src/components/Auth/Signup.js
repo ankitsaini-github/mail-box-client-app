@@ -1,17 +1,15 @@
-import React,{useRef} from "react";
+import React,{ useState} from "react";
 import { Button, FloatingLabel, Form } from "react-bootstrap";
 
 const Signup = () => {
-  const useremail = useRef(null);
-  const password = useRef(null);
-  const confirmpassword = useRef(null);
+  const [useremail, setuseremail] = useState('')
+  const [password, setpassword] = useState('')
+  const [confirmpassword, setconfirmpassword] = useState('')
 
+  
   const submitHandler = async(e) => {
     e.preventDefault();
-    const enteredemail=useremail.current.value;
-    const enteredpassword=password.current.value;
-    const confirmation=confirmpassword.current.value;
-    if(enteredpassword!==confirmation){
+    if(password!==confirmpassword){
         window.alert('Password do not match !!!')
         return;
     }
@@ -22,8 +20,8 @@ const Signup = () => {
         const res = await fetch(url,{
           method:'POST',
           body:JSON.stringify({
-            email: enteredemail,
-            password: enteredpassword,
+            email: useremail,
+            password: password,
             returnSecureToken: true,
           }),
           headers:{
@@ -67,7 +65,8 @@ const Signup = () => {
             type="email"
             placeholder="Email"
             autoComplete=""
-            ref={useremail}
+            value={useremail}
+            onChange={(e)=>setuseremail(e.target.value)}
             required
           />
         </FloatingLabel>
@@ -80,7 +79,8 @@ const Signup = () => {
             type="password"
             placeholder="Password"
             autoComplete=""
-            ref={password}
+            value={password}
+            onChange={(e)=>setpassword(e.target.value)}
             required
           />
         </FloatingLabel>
@@ -93,7 +93,8 @@ const Signup = () => {
             type="password"
             placeholder="Password"
             autoComplete=""
-            ref={confirmpassword}
+            value={confirmpassword}
+            onChange={(e)=>setconfirmpassword(e.target.value)}
             required
           />
         </FloatingLabel>
@@ -101,6 +102,7 @@ const Signup = () => {
           variant="primary rounded-pill px-5 my-4"
           type="submit"
           size="lg"
+          disabled={password!==confirmpassword || useremail.length===0}
         >
           Sign Up
         </Button>
