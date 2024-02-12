@@ -1,22 +1,16 @@
 import React,{ useState} from "react";
 import { Button, FloatingLabel, Form } from "react-bootstrap";
-import { useHistory } from "react-router-dom/cjs/react-router-dom";
+import { Link, useHistory } from "react-router-dom/cjs/react-router-dom";
 
-const Signup = () => {
-  const history=useHistory()
+const Login = () => {
+    const history=useHistory();
   const [useremail, setuseremail] = useState('')
   const [password, setpassword] = useState('')
-  const [confirmpassword, setconfirmpassword] = useState('')
-
   
   const submitHandler = async(e) => {
     e.preventDefault();
-    if(password!==confirmpassword){
-        window.alert('Password do not match !!!')
-        return;
-    }
 
-    let url='https://identitytoolkit.googleapis.com/v1/accounts:signUp?key=AIzaSyCNjyGdvZOwov0B76Oqc9_7DGWkVBnUODY';
+    let url='https://identitytoolkit.googleapis.com/v1/accounts:signInWithPassword?key=AIzaSyCNjyGdvZOwov0B76Oqc9_7DGWkVBnUODY';
 
     try{
         const res = await fetch(url,{
@@ -35,8 +29,8 @@ const Signup = () => {
           if(data){
             localStorage.setItem('usertoken',data.idToken)
             localStorage.setItem('userid',data.localId)
-            console.log('Successfully SignedUp !',data)
-            window.alert('Successfully SignedUp !')
+            console.log('Successfully Logged In !',data)
+            window.alert('Successfully Logged In !')
             history.push('/mailbox');
           }
         }
@@ -55,8 +49,8 @@ const Signup = () => {
       }
 
   };
-  const logintoggler = () => {
-    history.push('/login');
+  const signuptoggler = () => {
+    history.push('/signup');
   };
   return (
     <div className="bg-light d-flex justify-content-center align-items-center w-100 h-100 flex-column">
@@ -64,7 +58,7 @@ const Signup = () => {
         className="border w-25 w-sm-75 p-4 bg-white d-flex flex-column"
         onSubmit={submitHandler}
       >
-        <span className="fs-3 my-2">SignUp</span>
+        <span className="fs-3 my-2">LogIn</span>
         <FloatingLabel controlId="useremail" label="Email" className="my-3">
           <Form.Control
             type="email"
@@ -89,38 +83,25 @@ const Signup = () => {
             required
           />
         </FloatingLabel>
-        <FloatingLabel
-          controlId="userconfirmpassword"
-          label="Confirm Password"
-          className="my-3"
-        >
-          <Form.Control
-            type="password"
-            placeholder="Password"
-            autoComplete=""
-            value={confirmpassword}
-            onChange={(e)=>setconfirmpassword(e.target.value)}
-            required
-          />
-        </FloatingLabel>
         <Button
           variant="primary rounded-pill px-5 my-4"
           type="submit"
           size="lg"
-          disabled={password!==confirmpassword || useremail.length===0}
+          disabled={password.length===0 || useremail.length===0}
         >
-          Sign Up
+          Log In
         </Button>
+        <Link to='/forgot-password'>Forgot Password ?</Link>
       </Form>
       <Button
         variant="outline-success mt-4 text-success"
         style={{ backgroundColor: "rgb(209, 231, 221)" }}
-        onClick={logintoggler}
+        onClick={signuptoggler}
       >
-        Have an account? LogIn
+        Dont have an account? SignUp
       </Button>
     </div>
   );
 };
 
-export default Signup;
+export default Login;
