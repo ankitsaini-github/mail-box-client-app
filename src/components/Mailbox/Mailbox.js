@@ -1,22 +1,24 @@
-import React, { useState } from 'react'
-import { Editor } from "react-draft-wysiwyg";
-import { EditorState, convertToRaw } from 'draft-js';
-import "react-draft-wysiwyg/dist/react-draft-wysiwyg.css";
+import React, { useRef, useState } from 'react'
 import { Button, Form} from 'react-bootstrap';
+import JoditEditor from 'jodit-react';
 
 const Mailbox = () => {
-  const [editorState, setEditorState] = useState(EditorState.createEmpty());
-
-  const onEditorStateChange = (newEditorState) => {
-    setEditorState(newEditorState);
-  };
-  const sendmail=() => {
-    console.log(convertToRaw(editorState.getCurrentContent()))
+  const editor=useRef(null)
+  const [content, setcontent] = useState('')
+  const sendmail=(e) => {
+    e.preventDefault();
+    const emaildata={
+      from:'',
+      to:e.target.emailreceiver.value,
+      subject:e.target.emailsubject.value,
+      message:content,
+    }
+    console.log(emaildata)
   }
   return (
     <div>
-      <Form className='mx-3 p-3 border mt-4'>
-        <Form.Group className="mb-3 text-start" controlId="toemail">
+      <Form className='mx-3 p-3 border mt-4' onSubmit={sendmail}>
+        <Form.Group className="mb-3 text-start" controlId="emailreceiver">
           <Form.Label>To :</Form.Label>
           <Form.Control type="email" placeholder="name@example.com" />
         </Form.Group>
@@ -26,13 +28,16 @@ const Mailbox = () => {
           <Form.Control type="text" placeholder="Subject" />
         </Form.Group>
         
-        <Editor
-            editorState={editorState}
-            wrapperClassName="demo-wrapper"
-            editorClassName="demo-editor"
-            onEditorStateChange={onEditorStateChange}
+        {/* <Form.Control as="textarea" rows={3} /> */}
+
+        <JoditEditor
+          ref={editor}
+          value={content}
+          onBlur={newContent => setcontent(newContent)} // preferred to use only this option to update the content for performance reasons
+          onChange={newContent =>setcontent(newContent)}
         />
-        <Button variant='primary' onClick={sendmail}>Send</Button>
+
+        <Button variant='primary mt-4' type='submit'>Send</Button>
       </Form>
     </div>
   )

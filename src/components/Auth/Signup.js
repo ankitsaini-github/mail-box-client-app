@@ -35,6 +35,7 @@ const Signup = () => {
           if(data){
             localStorage.setItem('usertoken',data.idToken)
             localStorage.setItem('userid',data.localId)
+            localStorage.setItem('useremail',useremail)
             console.log('Successfully SignedUp !',data)
             window.alert('Successfully SignedUp !')
             history.push('/mailbox');

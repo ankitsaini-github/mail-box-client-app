@@ -29,6 +29,7 @@ const Login = () => {
           if(data){
             localStorage.setItem('usertoken',data.idToken)
             localStorage.setItem('userid',data.localId)
+            localStorage.setItem('useremail',useremail)
             console.log('Successfully Logged In !',data)
             window.alert('Successfully Logged In !')
             history.push('/mailbox');
