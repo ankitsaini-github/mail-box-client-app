@@ -6,6 +6,7 @@ import Topbar from './components/Topbar';
 import Signup from './components/Auth/Signup';
 import Login from './components/Auth/Login';
 import Mailbox from './components/Mailbox/Mailbox';
+import Inbox from './components/Mailbox/Inbox';
 
 function App() {
   return (
@@ -24,6 +25,9 @@ function App() {
           </Route>
           <Route path='/mailbox'>
             <Mailbox/>
+          </Route>
+          <Route path='/inbox'>
+            <Inbox/>
           </Route>
         </Switch>
       </div>

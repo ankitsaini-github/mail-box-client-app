@@ -1,19 +1,42 @@
 import React, { useRef, useState } from 'react'
 import { Button, Form} from 'react-bootstrap';
 import JoditEditor from 'jodit-react';
+import { useHistory } from 'react-router-dom/cjs/react-router-dom';
 
 const Mailbox = () => {
+  const history=useHistory()
   const editor=useRef(null)
   const [content, setcontent] = useState('')
-  const sendmail=(e) => {
+  const sendmail=async(e) => {
     e.preventDefault();
     const emaildata={
-      from:'',
+      from:window.localStorage.getItem('useremail'),
       to:e.target.emailreceiver.value,
       subject:e.target.emailsubject.value,
       message:content,
     }
-    console.log(emaildata)
+
+    //post emaildata
+    const url=`https://react-prep-2265-default-rtdb.asia-southeast1.firebasedatabase.app/mailbox/mails.json`
+
+    try {
+      const res=await fetch(url,{
+        method:'POST',
+        body: JSON.stringify(emaildata),
+        headers:{
+          'Content-Type' : 'application/json'
+        }
+      })
+      if(!res.ok){
+        console.log('got error ....')
+        throw new Error('Something went wrong!');
+      }
+    } catch (error) {
+      console.log(error)
+    }
+
+    console.log('sent:',emaildata)
+    history.push('/inbox')
   }
   return (
     <div>
