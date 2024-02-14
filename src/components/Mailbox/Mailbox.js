@@ -7,7 +7,40 @@ const Mailbox = () => {
   const history=useHistory()
   const editor=useRef(null)
   const [content, setcontent] = useState('')
-  const sendmail=async(e) => {
+
+  // const sendmail=async(e) => {
+  //   e.preventDefault();
+  //   const emaildata={
+  //     from:window.localStorage.getItem('useremail'),
+  //     to:e.target.emailreceiver.value,
+  //     subject:e.target.emailsubject.value,
+  //     message:content,
+  //   }
+
+  //   //post emaildata
+  //   const url=`https://react-prep-2265-default-rtdb.asia-southeast1.firebasedatabase.app/mailbox/mails.json`
+
+  //   try {
+  //     const res=await fetch(url,{
+  //       method:'POST',
+  //       body: JSON.stringify(emaildata),
+  //       headers:{
+  //         'Content-Type' : 'application/json'
+  //       }
+  //     })
+  //     if(!res.ok){
+  //       console.log('got error ....')
+  //       throw new Error('Something went wrong!');
+  //     }
+  //   } catch (error) {
+  //     console.log(error)
+  //   }
+
+  //   console.log('sent:',emaildata)
+  //   history.push('/inbox')
+  // }
+
+  const sendmail=(e) => {
     e.preventDefault();
     const emaildata={
       from:window.localStorage.getItem('useremail'),
@@ -16,31 +49,42 @@ const Mailbox = () => {
       message:content,
     }
 
-    //post emaildata
-    const url=`https://react-prep-2265-default-rtdb.asia-southeast1.firebasedatabase.app/mailbox/mails.json`
-
-    try {
-      const res=await fetch(url,{
-        method:'POST',
-        body: JSON.stringify(emaildata),
-        headers:{
-          'Content-Type' : 'application/json'
+    //post emaildata for sender
+    const sender=emaildata.from.replace('@','').replace('.','');
+    const senderurl=`https://react-prep-2265-default-rtdb.asia-southeast1.firebasedatabase.app/mailbox/users/${sender}/sent.json`
+    //post emaildata for reciever
+    const reciever=emaildata.to.replace('@','').replace('.','');
+    const recieverurl=`https://react-prep-2265-default-rtdb.asia-southeast1.firebasedatabase.app/mailbox/users/${reciever}/inbox.json`
+    
+    //post email function
+    const postemail=async(url) => {
+      try {
+        const res=await fetch(url,{
+          method:'POST',
+          body: JSON.stringify(emaildata),
+          headers:{
+            'Content-Type' : 'application/json'
+          }
+        })
+        if(!res.ok){
+          console.log('got error ....')
+          throw new Error('Something went wrong!');
         }
-      })
-      if(!res.ok){
-        console.log('got error ....')
-        throw new Error('Something went wrong!');
+      } catch (error) {
+        console.log(error)
       }
-    } catch (error) {
-      console.log(error)
     }
+
+    postemail(senderurl)
+    postemail(recieverurl)
 
     console.log('sent:',emaildata)
     history.push('/inbox')
   }
+
   return (
     <div>
-      <Form className='mx-3 p-3 border mt-4' onSubmit={sendmail}>
+      <Form className='mx-3 p-3 border mt-4 bg-light shadow-sm' onSubmit={sendmail}>
         <Form.Group className="mb-3 text-start" controlId="emailreceiver">
           <Form.Label>To :</Form.Label>
           <Form.Control type="email" placeholder="name@example.com" />

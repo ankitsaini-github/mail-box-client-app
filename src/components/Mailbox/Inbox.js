@@ -3,13 +3,15 @@ import { Row,Col } from 'react-bootstrap';
 
 const Inbox = () => {
   const [mails, setmails] = useState([]);
-  const myemail=window.localStorage.getItem('useremail')
+  
   useEffect(()=>{
 
     const getmails=async()=>{
-      const url=`https://react-prep-2265-default-rtdb.asia-southeast1.firebasedatabase.app/mailbox/mails.json`
+      const myemail=window.localStorage.getItem('useremail').replace('@','').replace('.','');
+
+      const recieverurl=`https://react-prep-2265-default-rtdb.asia-southeast1.firebasedatabase.app/mailbox/users/${myemail}/inbox.json`
       try {
-        const res=await fetch(url)
+        const res=await fetch(recieverurl)
         if(!res.ok){
           console.log('got error ....')
           throw new Error('Something went wrong!');
@@ -35,20 +37,24 @@ const Inbox = () => {
     }
     getmails();
   },[])
-  const inbox=mails.filter(mail=>mail.to===myemail)
+  // const inbox=mails.filter(mail=>mail.to===myemail)
   return (
     <div className='mt-3'>
       <ul>
-        {inbox.length===0?<p className='text-center mt-5 text-black-50'>Your Inbox is Empty</p>:
-          inbox.map(mail=>{
+        {mails.length===0?<p className='text-center mt-5 text-black-50'>Your Inbox is Empty</p>:
+          mails.map((mail,i)=>{
             return(
-              <Row xs={1} md={3} key={mail.id} className='border-bottom mt-2'>
+              <Row xs={2} key={mail.id}  className={`border-bottom ${i%2===0?'':'bg-light'}`}>
+                <Col xs={1}><span className='mx-2'><input type='checkbox'/></span></Col>
+              <Col xs={11}>
+              <Row xs={1} md={3}>
                 <Col md={4}>
-                  <span className='mx-2'><input type='checkbox'/></span>
                   <span className='fw-bold'>{mail.from}</span>
                 </Col>
                 <Col md={4} className='fw-bold'>{mail.subject}</Col>
-                <Col md={4} dangerouslySetInnerHTML={{__html:mail.message}} className='text-muted'></Col>
+                <Col md={4} dangerouslySetInnerHTML={{__html:mail.message}} className='text-muted mb-0'></Col>
+              </Row>
+              </Col>
               </Row>
             )
           })

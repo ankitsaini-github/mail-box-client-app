@@ -63,7 +63,7 @@ const Signup = () => {
     <div className="bg-light d-flex justify-content-center align-items-center w-100 h-100 flex-column">
       <Form
         className="border p-4 bg-white d-flex flex-column"
-        style={{width:'50wh'}}
+        style={{width:'300px'}}
         onSubmit={submitHandler}
       >
         <span className="fs-3 my-2">SignUp</span>
