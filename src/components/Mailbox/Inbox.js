@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react'
-import { Row,Col } from 'react-bootstrap';
+import { Row,Col, Button } from 'react-bootstrap';
 import Mail from './Mail';
 
 const Inbox = () => {
@@ -76,11 +76,38 @@ const Inbox = () => {
     setshowinbox(false)
     // history.push('/mail')
   }
+
+  const deletemail=async(mailid,email) => {
+    if(window.confirm('want to delete mail ?')){
+      const myemail=email.replace('@','').replace('.','');
+      const delurl=`https://react-prep-2265-default-rtdb.asia-southeast1.firebasedatabase.app/mailbox/users/${myemail}/inbox/${mailid}.json`
+      try {
+        const res=await fetch(delurl,{
+          method:'DELETE',
+        })
+        if(!res.ok){
+          throw new Error('something went wrong')
+        }
+        else{
+          window.alert('mail deleted successfully !')
+          const updatedmails=mails.filter(m=>m.id!==mailid)
+          setmails(updatedmails)
+          setshowinbox(true)
+        }
+      } catch (error) {
+        console.log(error)
+      }
+    }
+    else
+      return;
+  }
+
   function extractTextFromHtml(htmlString) {
     const tempElement = document.createElement('div');
     tempElement.innerHTML = htmlString;
     return tempElement.textContent || tempElement.innerText;
   }
+
   return (
     <div >
       {showinbox ? <><div className='d-flex justify-content-between align-items-center my-2'>
@@ -91,16 +118,16 @@ const Inbox = () => {
         return acc
         },0)}</span>
       </div>
-      <ul className='border-top'>
+      <ul className='border-top px-4'>
         {mails.length===0?<p className='text-center mt-5 text-black-50'>Your Inbox is Empty</p>:
           mails.map((mail,i)=>{
             return(
-              <Row xs={2} key={mail.id}  className={`border-bottom py-2 ${i%2===0?'':'bg-light'}`} >
+              <Row xs={3} key={mail.id}  className={`border-bottom py-2 ${i%2===0?'':'bg-light'}`} >
                 <Col xs={1} className='p-0'>
                   <span className='mx-2'><input type='checkbox'/></span>
                   <span className='text-primary fw-bold float-end'>{mail.read?' ': '●'}</span>
                 </Col>
-              <Col xs={11}>
+              <Col xs={10}>
               <Row xs={1} md={3} className='text-start' onClick={openmail.bind(null,mail)} style={{cursor:'pointer'}}>
                 <Col md={4}>
                   <span className='fw-bold'>{mail.from}</span>
@@ -109,11 +136,12 @@ const Inbox = () => {
                 <Col md={4}  className='text-muted mb-0' style={{width:'30%',overflow:'hidden',whiteSpace:'nowrap',textOverflow:'ellipsis'}}>{extractTextFromHtml(mail.message)}</Col>
               </Row>
               </Col>
+              <Col xs={1}><Button variant='danger py-0 me-2' size='sm' onClick={deletemail.bind(null,mail.id,mail.to)}>X</Button></Col>
               </Row>
             )
           })
         }
-      </ul></>:<Mail mail={maildetail} closemail={()=>setshowinbox(true)}/>}
+      </ul></>:<Mail mail={maildetail} closemail={()=>setshowinbox(true)} onDelete={deletemail}/>}
     </div>
   )
 }
