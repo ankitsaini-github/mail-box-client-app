@@ -2,47 +2,19 @@ import React, { useEffect, useState } from 'react'
 import { Row,Col, Button } from 'react-bootstrap';
 
 import Mail from './Mail';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchmails, mailActions } from '../../store/MailReducer';
 
 const Sent = () => {
-  const [mails, setmails] = useState([]);
+  const dispatch=useDispatch();
+  const mails=useSelector(state=>state.mails.sent)
   const [showinbox, setshowinbox] = useState(true)
   const [maildetail, setmaildetail] = useState({})
   
   useEffect(()=>{
+    dispatch(fetchmails(2))
+  },[dispatch])
 
-    const getmails=async()=>{
-      const myemail=window.localStorage.getItem('useremail').replace('@','').replace('.','');
-
-      const senturl=`https://react-prep-2265-default-rtdb.asia-southeast1.firebasedatabase.app/mailbox/users/${myemail}/sent.json`
-      try {
-        const res=await fetch(senturl)
-        if(!res.ok){
-          console.log('got error ....')
-          throw new Error('Something went wrong!');
-        }
-        const data=await res.json()
-        if(data){
-          console.log(data)
-          const loadedmail=[]
-          for (const key in data){
-            loadedmail.push({
-              id:key,
-              to:data[key].to,
-              from:data[key].from,
-              message:data[key].message,
-              subject:data[key].subject,
-              read:data[key].read,
-            })
-          }
-          setmails(loadedmail)
-        }
-      } catch (error) {
-        console.log(error)
-      }
-    }
-    getmails();
-  },[])
-  // const inbox=mails.filter(mail=>mail.to===myemail)
   const setRead=async(mail) => {
     const myemail=window.localStorage.getItem('useremail').replace('@','').replace('.','');
     const mailurl=`https://react-prep-2265-default-rtdb.asia-southeast1.firebasedatabase.app/mailbox/users/${myemail}/sent/${mail.id}.json`
@@ -92,7 +64,8 @@ const Sent = () => {
         else{
           window.alert('mail deleted successfully !')
           const updatedmails=mails.filter(m=>m.id!==mailid)
-          setmails(updatedmails)
+          // setmails(updatedmails)
+          dispatch(mailActions.setsent(updatedmails))
           setshowinbox(true)
         }
       } catch (error) {
