@@ -7,7 +7,6 @@ import Signup from './components/Auth/Signup';
 import Login from './components/Auth/Login';
 import Mailbox from './components/Mailbox/Mailbox';
 import Inbox from './components/Mailbox/Inbox';
-import Mail from './components/Mailbox/Mail';
 
 function App() {
   return (
@@ -30,10 +29,6 @@ function App() {
           <Route path='/inbox'>
             <Inbox/>
           </Route>
-          <Route path='/mail'>
-            <Mail/>
-          </Route>
-          
         </Switch>
       </div>
     </BrowserRouter>

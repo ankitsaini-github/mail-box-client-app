@@ -1,19 +1,18 @@
 import React from 'react'
-import { Link } from 'react-router-dom/cjs/react-router-dom'
 
-const Mail = (props) => {
+const Mail = ({mail,closemail}) => {
   return (
     <div>
       <div className='d-flex justify-content-between align-items-center my-2 border-bottom py-2'>
-        <Link className='mx-4 fw-bold fs-6 text-decoration-none' to={'/inbox'}>🢀 Back</Link>
+        <span className='mx-4 fw-bold fs-6 text-decoration-none' onClick={closemail} style={{cursor:'pointer'}}>🢀 Back</span>
       </div>
       <div className='mx-5 p-2 border'>
-        <div className='border-bottom py-2 fw-bold'>Subject</div>
+        <div className='border-bottom py-2 fw-bold'>{mail.subject}</div>
         <div className='d-flex flex-column border-bottom py-2'>
-          <div className='fw-bold'>from</div>
-          <div>to</div>
+          <div className='fw-bold'>{mail.from}</div>
+          <div>{mail.to}</div>
         </div>
-        <div className='p-2'>message</div>
+        <div className='p-2' dangerouslySetInnerHTML={{__html:mail.message}}></div>
       </div>
     </div>
   )

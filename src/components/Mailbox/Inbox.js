@@ -1,10 +1,11 @@
 import React, { useEffect, useState } from 'react'
 import { Row,Col } from 'react-bootstrap';
-import { useHistory } from 'react-router-dom/cjs/react-router-dom';
+import Mail from './Mail';
 
 const Inbox = () => {
-  const history=useHistory();
   const [mails, setmails] = useState([]);
+  const [showinbox, setshowinbox] = useState(true)
+  const [maildetail, setmaildetail] = useState({})
   
   useEffect(()=>{
 
@@ -46,7 +47,7 @@ const Inbox = () => {
     const mailurl=`https://react-prep-2265-default-rtdb.asia-southeast1.firebasedatabase.app/mailbox/users/${myemail}/inbox/${mail.id}.json`
     try {
       const res=await fetch(mailurl,{
-          method: "POST",
+          method: "PUT",
           body: JSON.stringify({
             from:mail.from,
             to:mail.to,
@@ -68,13 +69,16 @@ const Inbox = () => {
   const openmail=(mail) => {
     console.log('open :',mail)
     //set mail to read
+    if(!mail.read)
     setRead(mail)
     //open mail
-    history.push('/mail')
+    setmaildetail(mail)
+    setshowinbox(false)
+    // history.push('/mail')
   }
   return (
     <div >
-      <div className='d-flex justify-content-between align-items-center my-2'>
+      {showinbox ? <><div className='d-flex justify-content-between align-items-center my-2'>
         <span className='mx-4 fw-bold fs-5'>My Inbox</span>
         <span className='mx-4'>Unread Mails : {mails.reduce((acc,cur)=>{
           if(!cur.read)
@@ -104,7 +108,7 @@ const Inbox = () => {
             )
           })
         }
-      </ul>
+      </ul></>:<Mail mail={maildetail} closemail={()=>setshowinbox(true)}/>}
     </div>
   )
 }
