@@ -11,7 +11,12 @@ const Inbox = () => {
   const [maildetail, setmaildetail] = useState({})
   
   useEffect(()=>{
+    const fetchtinterval=setInterval(() => {
       dispatch(fetchmails(1))
+    }, 5000);
+    return ()=>{
+      clearInterval(fetchtinterval)
+    }
   },[dispatch])
   
   const setRead=async(mail) => {
