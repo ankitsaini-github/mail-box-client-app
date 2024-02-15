@@ -47,6 +47,7 @@ const Mailbox = () => {
       to:e.target.emailreceiver.value,
       subject:e.target.emailsubject.value,
       message:content,
+      read:false,
     }
 
     //post emaildata for sender
