@@ -76,6 +76,11 @@ const Inbox = () => {
     setshowinbox(false)
     // history.push('/mail')
   }
+  function extractTextFromHtml(htmlString) {
+    const tempElement = document.createElement('div');
+    tempElement.innerHTML = htmlString;
+    return tempElement.textContent || tempElement.innerText;
+  }
   return (
     <div >
       {showinbox ? <><div className='d-flex justify-content-between align-items-center my-2'>
@@ -90,7 +95,7 @@ const Inbox = () => {
         {mails.length===0?<p className='text-center mt-5 text-black-50'>Your Inbox is Empty</p>:
           mails.map((mail,i)=>{
             return(
-              <Row xs={2} key={mail.id}  className={`border-bottom ${i%2===0?'':'bg-light'}`} >
+              <Row xs={2} key={mail.id}  className={`border-bottom py-2 ${i%2===0?'':'bg-light'}`} >
                 <Col xs={1} className='p-0'>
                   <span className='mx-2'><input type='checkbox'/></span>
                   <span className='text-primary fw-bold float-end'>{mail.read?' ': '●'}</span>
@@ -101,7 +106,7 @@ const Inbox = () => {
                   <span className='fw-bold'>{mail.from}</span>
                 </Col>
                 <Col md={4} className='fw-bold'>{mail.subject}</Col>
-                <Col md={4} dangerouslySetInnerHTML={{__html:mail.message}} className='text-muted mb-0'></Col>
+                <Col md={4}  className='text-muted mb-0' style={{width:'30%',overflow:'hidden',whiteSpace:'nowrap',textOverflow:'ellipsis'}}>{extractTextFromHtml(mail.message)}</Col>
               </Row>
               </Col>
               </Row>
