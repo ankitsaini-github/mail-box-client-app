@@ -1,8 +1,11 @@
 import React,{ useState} from "react";
 import { Button, FloatingLabel, Form } from "react-bootstrap";
+import { useDispatch } from "react-redux";
 import { Link, useHistory } from "react-router-dom/cjs/react-router-dom";
+import { authActions } from "../../store/authReducer";
 
 const Login = () => {
+  const dispatch=useDispatch()
     const history=useHistory();
   const [useremail, setuseremail] = useState('')
   const [password, setpassword] = useState('')
@@ -32,6 +35,7 @@ const Login = () => {
             localStorage.setItem('useremail',useremail)
             console.log('Successfully Logged In !',data)
             window.alert('Successfully Logged In !')
+            dispatch(authActions.login())
             history.push('/mailbox');
           }
         }
