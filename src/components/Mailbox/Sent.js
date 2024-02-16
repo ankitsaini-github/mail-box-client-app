@@ -4,11 +4,13 @@ import { Row,Col, Button } from 'react-bootstrap';
 import Mail from './Mail';
 import { useDispatch, useSelector } from 'react-redux';
 import { fetchmails, mailActions } from '../../store/MailReducer';
+import useToggle from '../../customHooks/useToggle';
 
 const Sent = () => {
   const dispatch=useDispatch();
   const mails=useSelector(state=>state.mails.sent)
-  const [showinbox, setshowinbox] = useState(true)
+  // const [showinbox, setshowinbox] = useState(true)
+  const [showinbox, setshowinbox] = useToggle(true)
   const [maildetail, setmaildetail] = useState({})
   
   useEffect(()=>{
@@ -40,7 +42,7 @@ const Sent = () => {
     }
   }
   const openmail=(mail) => {
-    console.log('open :',mail)
+    // console.log('open :',mail)
     //set mail to read
     if(!mail.read)
     setRead(mail)

@@ -44,7 +44,7 @@ const Inbox = () => {
     }
   }
   const openmail=(mail) => {
-    console.log('open :',mail)
+    // console.log('open :',mail)
     //set mail to read
     if(!mail.read)
     setRead(mail)
@@ -58,6 +58,7 @@ const Inbox = () => {
     if(window.confirm('want to delete mail ?')){
       const myemail=email.replace('@','').replace('.','');
       const delurl=`https://react-prep-2265-default-rtdb.asia-southeast1.firebasedatabase.app/mailbox/users/${myemail}/inbox/${mailid}.json`
+
       try {
         const res=await fetch(delurl,{
           method:'DELETE',
